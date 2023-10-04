@@ -20,7 +20,7 @@ create_ingress_cidr         = true
 ingress_cidr_from_port      = [22, 8080]
 ingress_cidr_to_port        = [22, 8080]
 ingress_cidr_protocol       = ["tcp", "tcp"]
-ingress_cidr_block          = ["0.0.0.0/0", "0.0.0.0/0"]
+ingress_cidr_block          = ["10.0.0.0/16", "172.16.0.0/16"]
 
 # CIDR Egress Variables
 create_egress_cidr          = true
