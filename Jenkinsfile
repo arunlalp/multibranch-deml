@@ -9,7 +9,8 @@ def PLAN_FILE = 'tfplan.binary'
 def PLAN_JSON_FILE = 'tfplan.json'
 def TFVARS_FILE_PATH = '../../vars/infra/dev/jenkins-agent.tfvars'
 def CUSTOM_POLICY = 'CUSTOM_AWS_*'
-def NOTIFICATION_EMAIL = 'arunsample555@gmail.com'     
+def NOTIFICATION_EMAIL = 'arunsample555@gmail.com' 
+def STATE_FILE = "jenkins_agent.tfstate"
 
 pipeline {
     agent {
@@ -19,25 +20,21 @@ pipeline {
             reuseNode true
         }
     }
-    // options {
-    //     // This is required if you want to clean before build
-    //     skipDefaultCheckout(true)
-    // }
-
+    
     parameters {
         string(name: 'action', defaultValue: ACTION_PARAM, description: 'Terraform Action (apply, destroy, etc.)')
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                checkout([
-                    $class: 'GitSCM',
-                    branches: [[name: '*/develop']],
-                    userRemoteConfigs: [[url: GIT_URL]]
-                ])
-            }
-        }
+        // stage('Checkout') {
+            // steps {
+            //     checkout([
+            //         $class: 'GitSCM',
+            //         branches: [[name: '*/develop']],
+            //         userRemoteConfigs: [[url: GIT_URL]]
+            //     ])
+            // }
+        // }
 
         stage('Terraform Init') {
             steps {
@@ -45,7 +42,7 @@ pipeline {
                 script {
                     terraformInit(
                         projectDirectory: PROJECT_DIR,
-                        tfstateFile: "jenkins_agent.tfstate",
+                        tfstateFile: STATE_FILE,
                         tfvarsFile: TF_VARS_FILE
                     )
                 }
@@ -84,17 +81,17 @@ pipeline {
             }
         }
 
-        // stage('Checkov Scan') {
-        //     steps {
-        //         script {
-        //             checkovScan(
-        //                 projectDirectory: PROJECT_DIR,
-        //                 planFileJson: PLAN_JSON_FILE,
-        //                 customPolicy: CUSTOM_POLICY
-        //             )
-        //         }
-        //     }
-        // }
+        stage('Checkov Scan') {
+            steps {
+                script {
+                    checkovScan(
+                        projectDirectory: PROJECT_DIR,
+                        planFileJson: PLAN_JSON_FILE,
+                        customPolicy: CUSTOM_POLICY
+                    )
+                }
+            }
+        }
 
         stage('Terraform Apply') {
             when {
@@ -122,8 +119,7 @@ pipeline {
                 script {
                     terraformDestroy(
                         projectDirectory: PROJECT_DIR,
-                        tfstateFile: "jenkins_agent.tfstate",
-                        tfvarsFile: TF_VARS_FILE
+                        variableFile: TF_VARS_FILE
                     )
                 }
             }
