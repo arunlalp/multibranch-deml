@@ -13,7 +13,7 @@ pipeline {
           // Change the working directory to the jenkins-agent directory
           dir('infra/jenkins-agent') {
             // Execute the jenkins-agent Jenkinsfile
-            load('jenkins-agent.jenkinsfile')
+            load('jenkins-agent.Jenkinsfile')
           }
         }
       }
@@ -28,7 +28,7 @@ pipeline {
           // Change the working directory to the jenkins-controller directory
           dir('infra/jenkins-controller') {
             // Execute the jenkins-controller Jenkinsfile
-            load('jenkins-controller.jenkinsfile')
+            load('jenkins-controller.Jenkinsfile')
           }
         }
       }
