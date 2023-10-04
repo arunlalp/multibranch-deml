@@ -37,7 +37,7 @@ pipeline {
             //         userRemoteConfigs: [[url: GIT_URL]]
             //     ])
             // }
-        }
+        // }
 
         stage('Terraform Init') {
             steps {
