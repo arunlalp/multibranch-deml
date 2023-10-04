@@ -30,13 +30,13 @@ pipeline {
 
     stages {
         stage('Checkout') {
-            steps {
-                checkout([
-                    $class: 'GitSCM',
-                    branches: [[name: '*/develop']],
-                    userRemoteConfigs: [[url: GIT_URL]]
-                ])
-            }
+            // steps {
+            //     checkout([
+            //         $class: 'GitSCM',
+            //         branches: [[name: '*/develop']],
+            //         userRemoteConfigs: [[url: GIT_URL]]
+            //     ])
+            // }
         }
 
         stage('Terraform Init') {
